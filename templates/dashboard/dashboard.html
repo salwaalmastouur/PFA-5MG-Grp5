@@ -1,0 +1,32 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+{% if request.user.is_employe %}
+
+<section class="container mt-5">
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Employe Dashboard</h1>
+            <p class="col-md-8 fs-4">You are probably wondering if it is essential to take care of your website's footer. Exactly, if you want to take care of the visitors of your site, do not neglect the layout of your footer. This function improves the user experience because it is a time savior. Most visitors are looking for information or useful links at the bottom of a website. So if your footer is poorly presented, people may leave your site, hoping to quickly access contact information that is usually found at the bottom.
+                When they are not happy with the informations displayed on your site, they return to Google for another search or go to another site.</p>
+          <button class="btn btn-primary btn-lg">Example button</button>
+        </div>
+    </div>
+</section>
+
+{% elif request.user.is_engineer %}
+
+<section class="container mt-5">
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Engineer Dashboard</h1>
+            <p class="col-md-8 fs-4">You are probably wondering if it is essential to take care of your website's footer. Exactly, if you want to take care of the visitors of your site, do not neglect the layout of your footer. This function improves the user experience because it is a time savior. Most visitors are looking for information or useful links at the bottom of a website. So if your footer is poorly presented, people may leave your site, hoping to quickly access contact information that is usually found at the bottom.
+                When they are not happy with the informations displayed on your site, they return to Google for another search or go to another site.</p>
+          <button class="btn btn-primary btn-lg">Example button</button>
+        </div>
+    </div>
+</section>
+
+{% endif %}
+{% endblock content %}

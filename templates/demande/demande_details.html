@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mx-auto" style="width: 40rem;">
+            <div class="card-body">
+                <h5 class="card-title mb-3">{{demande.titre}}</h5>
+                <p><b>Demande Number: </b><small>{{demande.demande_number}}</small></p>
+                <p class="card-text"><b>Demande Description: </b>{{demande.description}}</p>
+                <div class="row">
+                    <div class="col">
+                        <b>Date created: </b>{{demande.date_created}}
+                    </div>
+                     <div class="col">
+                        <b>Assigned To: </b>{{demande.assigned_to}}
+                    </div>
+                </div> <br>
+                <div class="row">
+                    <div class="col">
+                        {% if demande.is_resolved %}
+                        <b>Resolved yet?</b> <span class="badge bg-danger">Completed</span>
+                        {% else %}
+                        <b>Resolved? </b> <span class="badge bg-danger">Not Yet</span>
+                        {% endif %}
+                    </div>
+                     <div class="col">
+                         <b>Accepted Date: </b> <small>{{demande.accepted_date}}</small>
+                    </div>
+                </div> <br>
+                 <div class="row">
+                    <div class="col">
+                        <b>Created By: </b> <small>{{demande.created_by}}</small>
+                    </div>
+                     <div class="col">
+                         <b>Demande Status: </b> <small>{{demande.demande_status}}</small>
+                    </div>
+                    <!-- Pour afficher le contenu de reponse_title -->
+
+{% if request.user.is_engineer  %}
+<div class="row">
+    <div class="col">
+        <label for="id_reponse_title" class="form-label"><b>Réponse Title :</b></label>
+        <textarea id="id_reponse_title" name="reponse_title" rows="4" class="form-control">{{ demande.repons_title }}</textarea>
+    </div>
+</div>
+{% elif request.user.is_employe  %}
+<div class="row">
+    <div class="col">
+        <b>Réponse Employé :</b>
+        {% if demande.repons_title %}
+        <p>{{ demande.repons_title }}</p>
+        {% else %}
+        <p>Le champ de réponse est vide.</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mx-auto" style="width: 40rem;">
+            <div class="card-body">
+                <h5 class="card-title mb-3">All Demande created by {{demande.created_by}}</h5>
+                {% for demande in demande_per_user %}
+                <p class="card-text">{{demande.demande_number}}<a href="{% url 'demande-details' demande.pk %}">(view)</a></p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+{% if request.user.is_engineer and not demande.is_resolved %}
+<a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Confirm Resolution</a>
+{% endif %}
+
+{% if request.user.is_employe and not demande.is_resolved %}
+<a href="{% url 'update-demande' demande.pk %}" class="btn btn-primary">Update Demande</a>
+{% endif %}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Do you want to close the demande out?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <a href="{% url 'close-demande' demande.pk %}" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+<script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+{% endblock content %}
