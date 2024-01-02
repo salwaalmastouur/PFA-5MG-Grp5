@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "914864429412",
+    "project_id": "pfamobilee",
+    "storage_bucket": "pfamobilee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914864429412:android:d55ea1912f14e60f760271",
+        "android_client_info": {
+          "package_name": "com.example.pfamobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAj5CkivXKyMNZawAErSu5aoi52chwpNgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
