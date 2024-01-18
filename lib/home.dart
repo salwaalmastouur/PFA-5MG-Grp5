@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pfamobile/createdemandescreen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,30 +11,21 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Homepage",
-        ),
+        title: Text("Homepage"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "Please press the subscribe button for more videos",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            SizedBox(
-              height: 40,
-            ),
             MaterialButton(
               color: Colors.red,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => CreateDemandScreen()),
+                );
+              },
               child: Text(
-                'Subscribe',
+                'Create Demand',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'student.dart';
-import 'teacher.dart';
+import 'employee.dart';
+import 'Admin.dart';
 import 'register.dart';
 
 class LoginPage extends StatefulWidget {
@@ -226,24 +226,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "WEB",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
-                            color: Colors.blue[900],
-                          ),
-                        ),
-                        Text(
-                          "FUN",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
-                            color: Colors.yellowAccent[400],
-                          ),
-                        ),
-                      ],
+
                     ),
                   ],
                 ),
@@ -256,33 +239,36 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void route() {
-    User? user = FirebaseAuth.instance.currentUser;
-    var kk = FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        if (documentSnapshot.get('rool') == "Teacher") {
+  User? user = FirebaseAuth.instance.currentUser;
+  FirebaseFirestore.instance
+    .collection('users')
+    .doc(user!.uid)
+    .get()
+    .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists && documentSnapshot.data() != null) {
+        Map<String, dynamic> userData = documentSnapshot.data() as Map<String, dynamic>;
+        String? role = userData['role'];
+        if (role == "admin") {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-              builder: (context) => Teacher(),
-            ),
+            MaterialPageRoute(builder: (context) => Admin()),
+          );
+        } else if (role == "employee") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Employee()),
           );
         } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Student(),
-            ),
-          );
+          // Handle unexpected role or default case
+          print('Unexpected user role or null');
         }
       } else {
-        print('Document does not exist on the database');
+        print('Document does not exist on the database or data is null');
       }
+    }).catchError((error) {
+      print('Error fetching user data: $error');
     });
-  }
+}
 
   void signIn(String email, String password) async {
     if (_formkey.currentState!.validate()) {

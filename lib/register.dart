@@ -25,15 +25,17 @@ class _RegisterState extends State<Register> {
   final TextEditingController name = new TextEditingController();
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController mobile = new TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+
   bool _isObscure = true;
   bool _isObscure2 = true;
   File? file;
   var options = [
-    'Student',
-    'Teacher',
+    'employee',
+    'admin',
   ];
-  var _currentItemSelected = "Student";
-  var rool = "Student";
+  var _currentItemSelected = "employee";
+  var role = "employee";
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +106,36 @@ class _RegisterState extends State<Register> {
                           },
                           onChanged: (value) {},
                           keyboardType: TextInputType.emailAddress,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'Name',
+                            enabled: true,
+                            contentPadding: const EdgeInsets.only(
+                                left: 14.0, bottom: 8.0, top: 8.0),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.white),
+                              borderRadius: new BorderRadius.circular(20),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.white),
+                              borderRadius: new BorderRadius.circular(20),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your name';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {},
+                          keyboardType: TextInputType.text,
                         ),
                         SizedBox(
                           height: 20,
@@ -197,7 +229,7 @@ class _RegisterState extends State<Register> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Rool : ",
+                              "role : ",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -226,7 +258,7 @@ class _RegisterState extends State<Register> {
                               onChanged: (newValueSelected) {
                                 setState(() {
                                   _currentItemSelected = newValueSelected!;
-                                  rool = newValueSelected;
+                                  role = newValueSelected;
                                 });
                               },
                               value: _currentItemSelected,
@@ -274,7 +306,7 @@ class _RegisterState extends State<Register> {
                                   showProgress = true;
                                 });
                                 signUp(emailController.text,
-                                    passwordController.text, rool);
+                                    passwordController.text, role, nameController.text);
                               },
                               child: Text(
                                 "Register",
@@ -289,14 +321,7 @@ class _RegisterState extends State<Register> {
                         SizedBox(
                           height: 20,
                         ),
-                        Text(
-                          "WEBFUN",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
-                            color: Colors.yellowAccent[400],
-                          ),
-                        ),
+
                       ],
                     ),
                   ),
@@ -309,21 +334,24 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  void signUp(String email, String password, String rool) async {
+  void signUp(String email, String password, String role, String name) async {
     CircularProgressIndicator();
     if (_formkey.currentState!.validate()) {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) => {postDetailsToFirestore(email, rool)})
+          .then((value) => {postDetailsToFirestore(email, role, name)})
           .catchError((e) {});
     }
   }
 
-  postDetailsToFirestore(String email, String rool) async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    var user = _auth.currentUser;
-    CollectionReference ref = FirebaseFirestore.instance.collection('users');
-    ref.doc(user!.uid).set({'email': emailController.text, 'rool': rool});
+void postDetailsToFirestore(String email, String role, String name) async {
+  var user = _auth.currentUser;
+  CollectionReference ref = FirebaseFirestore.instance.collection('users');
+  ref.doc(user!.uid).set({
+    'email': email,
+    'role': role,
+    'name': name, // Ensure this is being set correctly
+  });
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
